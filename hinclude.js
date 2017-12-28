@@ -93,14 +93,19 @@ var hinclude;
       var i = 0;
       var mode = this.get_meta("include_mode", "buffered");
       var callback;
+      var self = this;
       this.includes = document.getElementsByTagName("hx:include");
       if (this.includes.length === 0) { // remove ns for IE
         this.includes = document.getElementsByTagName("include");
       }
       if (mode === "async") {
-        callback = this.set_content_async;
+        callback = function (element, req) {
+          self.set_content_async(element, req);
+        }
       } else if (mode === "buffered") {
-        callback = this.set_content_buffered;
+        callback = function (element, req) {
+          self.set_content_buffered(element, req);
+        }
         var timeout = this.get_meta("include_timeout", 2.5) * 1000;
         setTimeout(hinclude.show_buffered_content, timeout);
       }
